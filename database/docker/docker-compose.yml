@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -10,6 +12,49 @@ services:
     volumes:
       - library_sql_data:/var/opt/mssql
     restart: unless-stopped
+    networks:
+      - library-net
+
+  circulation-service:
+    build:
+      context: ../../backend/circulation-service
+      dockerfile: Dockerfile
+    container_name: circulation-service
+    ports:
+      - "3004:3004"
+    environment:
+      DB_HOST: sqlserver        # Kết nối tới container sqlserver bằng tên service
+      DB_PORT: 1433
+      DB_USERNAME: sa
+      DB_PASSWORD: ${DB_PASSWORD} # Tái sử dụng biến từ file .env chung
+      DB_NAME: LibraryDB
+      PORT: 3004
+    depends_on:
+      - sqlserver
+    restart: unless-stopped
+    networks:
+      - library-net
+
+  api-gateway:
+    build:
+      context: ../../backend/api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      CIRCULATION_SERVICE_HOST: circulation-service # Kết nối TCP tới container circulation-service
+      CIRCULATION_SERVICE_PORT: 3004
+    depends_on:
+      - circulation-service
+    restart: unless-stopped
+    networks:
+      - library-net
 
 volumes:
   library_sql_data:
+
+networks:
+  library-net:
+    driver: bridge
