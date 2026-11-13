@@ -7,6 +7,7 @@ import { Book } from './books/entities/book.entity';
 import { BookAuthor } from './book-authors/entities/book-author.entity';
 import { BookCopy } from './book-copies/entities/book-copy.entity';
 import { CategoriesModule } from './categories/categories.module';
+import { BooksModule } from './books/books.module';
 
 @Module({
   imports: [
@@ -44,6 +45,8 @@ import { CategoriesModule } from './categories/categories.module';
     }),
 
     CategoriesModule,
+
+    BooksModule,
   ],
 })
 export class AppModule {}
