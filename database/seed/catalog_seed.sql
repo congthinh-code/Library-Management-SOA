@@ -53,6 +53,45 @@ BEGIN TRY
 
 
     -- =========================================
+    -- BỔ SUNG 6 DANH MỤC MỚI
+    -- =========================================
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.categories WHERE name = N'Lịch sử')
+        INSERT INTO catalog.categories (name, description, created_at, updated_at)
+        VALUES (N'Lịch sử', N'Sách về lịch sử Việt Nam và thế giới', SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.categories WHERE name = N'Văn hóa')
+        INSERT INTO catalog.categories (name, description, created_at, updated_at)
+        VALUES (N'Văn hóa', N'Sách về văn hóa, phong tục và di sản', SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.categories WHERE name = N'Công nghệ')
+        INSERT INTO catalog.categories (name, description, created_at, updated_at)
+        VALUES (N'Công nghệ', N'Sách về công nghệ, lập trình và trí tuệ nhân tạo', SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.categories WHERE name = N'Tâm lý học')
+        INSERT INTO catalog.categories (name, description, created_at, updated_at)
+        VALUES (N'Tâm lý học', N'Sách về tâm lý, tư duy và hành vi con người', SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.categories WHERE name = N'Giáo dục')
+        INSERT INTO catalog.categories (name, description, created_at, updated_at)
+        VALUES (N'Giáo dục', N'Sách về học tập, giáo dục và phương pháp tự học', SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.categories WHERE name = N'Kinh tế')
+        INSERT INTO catalog.categories (name, description, created_at, updated_at)
+        VALUES (N'Kinh tế', N'Sách về kinh doanh, quản trị và kinh tế', SYSDATETIME(), SYSDATETIME());
+
+    -- Lấy ID 6 danh mục mới
+    DECLARE @LichSu BIGINT, @VanHoa BIGINT, @CongNghe BIGINT;
+    DECLARE @TamLy BIGINT, @GiaoDuc BIGINT, @KinhTe BIGINT;
+
+    SELECT @LichSu = category_id FROM catalog.categories WHERE name = N'Lịch sử';
+    SELECT @VanHoa = category_id FROM catalog.categories WHERE name = N'Văn hóa';
+    SELECT @CongNghe = category_id FROM catalog.categories WHERE name = N'Công nghệ';
+    SELECT @TamLy = category_id FROM catalog.categories WHERE name = N'Tâm lý học';
+    SELECT @GiaoDuc = category_id FROM catalog.categories WHERE name = N'Giáo dục';
+    SELECT @KinhTe = category_id FROM catalog.categories WHERE name = N'Kinh tế';
+
+    -- =========================================
     -- 2. AUTHORS
     -- =========================================
 
@@ -120,7 +159,18 @@ BEGIN TRY
         (N'J.D. Salinger', N'Nhà văn Mỹ.'),
         (N'Antoine de Saint-Exupéry', N'Nhà văn Pháp.'),
         (N'Hector Malot', N'Nhà văn Pháp.'),
-        (N'Victor Hugo', N'Nhà văn Pháp.')
+        (N'Victor Hugo', N'Nhà văn Pháp.'),
+        (N'Ngô Sĩ Liên', N'Sử gia Việt Nam, chủ biên Đại Việt sử ký toàn thư.'),
+        (N'Phan Huy Lê', N'Nhà sử học Việt Nam.'),
+        (N'Phan Kế Bính', N'Học giả Việt Nam, tác giả Việt Nam phong tục.'),
+        (N'Trần Ngọc Thêm', N'Nhà nghiên cứu văn hóa Việt Nam.'),
+        (N'Robert C. Martin', N'Kỹ sư phần mềm, tác giả Clean Code.'),
+        (N'Kai-Fu Lee', N'Chuyên gia trí tuệ nhân tạo.'),
+        (N'Daniel Kahneman', N'Nhà tâm lý học, nhà kinh tế học.'),
+        (N'Fukuzawa Yukichi', N'Nhà tư tưởng và nhà giáo dục Nhật Bản.'),
+        (N'Nguyễn Duy Cần', N'Học giả và tác giả Việt Nam.'),
+        (N'Dan Senor', N'Tác giả sách về kinh doanh và khởi nghiệp.'),
+        (N'W. Chan Kim', N'Giáo sư, đồng tác giả Chiến lược đại dương xanh.')
     ) AS v(name, biography)
     WHERE NOT EXISTS (
         SELECT 1 FROM catalog.authors a
@@ -152,6 +202,11 @@ BEGIN TRY
     DECLARE @StephenHawking BIGINT, @YuvalHarari BIGINT, @RobinSharma BIGINT;
     DECLARE @JosephMurphy BIGINT, @JDSalinger BIGINT, @AntoineExupery BIGINT;
     DECLARE @HectorMalot BIGINT, @VictorHugo BIGINT;
+    DECLARE @NgoSiLien BIGINT, @PhanHuyLe BIGINT;
+    DECLARE @PhanKeBinh BIGINT, @TranNgocThem BIGINT;
+    DECLARE @RobertMartin BIGINT, @KaiFuLee BIGINT;
+    DECLARE @DanielKahneman BIGINT, @FukuzawaYukichi BIGINT;
+    DECLARE @NguyenDuyCan BIGINT, @DanSenor BIGINT, @WChanKim BIGINT;
 
     SELECT @NguyenDu = author_id FROM catalog.authors WHERE name = N'Nguyễn Du';
     SELECT @NamCao = author_id FROM catalog.authors WHERE name = N'Nam Cao';
@@ -173,6 +228,18 @@ BEGIN TRY
     SELECT @AntoineExupery = author_id FROM catalog.authors WHERE name = N'Antoine de Saint-Exupéry';
     SELECT @HectorMalot = author_id FROM catalog.authors WHERE name = N'Hector Malot';
     SELECT @VictorHugo = author_id FROM catalog.authors WHERE name = N'Victor Hugo';
+    SELECT @NgoSiLien = author_id FROM catalog.authors WHERE name = N'Ngô Sĩ Liên';
+    SELECT @PhanHuyLe = author_id FROM catalog.authors WHERE name = N'Phan Huy Lê';
+    SELECT @PhanKeBinh = author_id FROM catalog.authors WHERE name = N'Phan Kế Bính';
+    SELECT @TranNgocThem = author_id FROM catalog.authors WHERE name = N'Trần Ngọc Thêm';
+    SELECT @RobertMartin = author_id FROM catalog.authors WHERE name = N'Robert C. Martin';
+    SELECT @KaiFuLee = author_id FROM catalog.authors WHERE name = N'Kai-Fu Lee';
+    SELECT @DanielKahneman = author_id FROM catalog.authors WHERE name = N'Daniel Kahneman';
+    SELECT @FukuzawaYukichi = author_id FROM catalog.authors WHERE name = N'Fukuzawa Yukichi';
+    SELECT @NguyenDuyCan = author_id FROM catalog.authors WHERE name = N'Nguyễn Duy Cần';
+    SELECT @DanSenor = author_id FROM catalog.authors WHERE name = N'Dan Senor';
+    SELECT @WChanKim = author_id FROM catalog.authors WHERE name = N'W. Chan Kim';
+    
     -- 3. BOOKS
     -- =========================================
 
@@ -287,6 +354,131 @@ BEGIN TRY
         FROM catalog.books b
         WHERE b.isbn = v.isbn
     );
+
+        -- =========================================
+    -- BỔ SUNG 12 SÁCH CHO 6 DANH MỤC MỚI
+    -- =========================================
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234540')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234540', N'Đại Việt sử ký toàn thư',
+         N'Bộ sử lớn ghi chép lịch sử Việt Nam qua nhiều triều đại.',
+         N'NXB Khoa học xã hội', 2017, @LichSu,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234541')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234541', N'Lịch sử Việt Nam',
+         N'Tổng quan về lịch sử hình thành và phát triển của Việt Nam.',
+         N'NXB Giáo dục Việt Nam', 2012, @LichSu,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234542')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234542', N'Việt Nam phong tục',
+         N'Khảo cứu phong tục và tập quán của người Việt.',
+         N'NXB Văn học', 2019, @VanHoa,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234543')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234543', N'Cơ sở văn hóa Việt Nam',
+         N'Giới thiệu những nền tảng và đặc trưng của văn hóa Việt Nam.',
+         N'NXB Giáo dục Việt Nam', 2016, @VanHoa,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234544')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234544', N'Clean Code',
+         N'Các nguyên tắc viết mã nguồn sạch và dễ bảo trì.',
+         N'Prentice Hall', 2008, @CongNghe,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234545')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234545', N'AI 2041',
+         N'Khám phá tương lai trí tuệ nhân tạo qua các câu chuyện.',
+         N'Currency', 2021, @CongNghe,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234546')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234546', N'Tư duy nhanh và chậm',
+         N'Tìm hiểu hai hệ thống tư duy và cách con người đưa ra quyết định.',
+         N'NXB Thế giới', 2011, @TamLy,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234547')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234547', N'Sức mạnh tiềm thức',
+         N'Cuốn sách về niềm tin và sức mạnh của tiềm thức.',
+         N'NXB Tổng hợp TP.HCM', 1963, @TamLy,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234548')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234548', N'Khuyến học',
+         N'Những tư tưởng về giáo dục và tinh thần tự lập.',
+         N'NXB Thế giới', 1872, @GiaoDuc,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234549')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234549', N'Tôi tự học',
+         N'Chia sẻ phương pháp và tinh thần tự học.',
+         N'NXB Trẻ', 1960, @GiaoDuc,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234550')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234550', N'Quốc gia khởi nghiệp',
+         N'Tìm hiểu tinh thần khởi nghiệp và đổi mới sáng tạo.',
+         N'NXB Thế giới', 2009, @KinhTe,
+         SYSDATETIME(), SYSDATETIME());
+
+    IF NOT EXISTS (SELECT 1 FROM catalog.books WHERE isbn = N'9786041234551')
+    INSERT INTO catalog.books
+        (isbn, title, description, publisher, published_year,
+         category_id, created_at, updated_at)
+    VALUES
+        (N'9786041234551', N'Chiến lược đại dương xanh',
+         N'Giới thiệu chiến lược tạo ra không gian thị trường mới.',
+         N'Harvard Business Review Press', 2005, @KinhTe,
+         SYSDATETIME(), SYSDATETIME());
+
     -- 4. BOOK_AUTHORS
     -- =========================================
 
@@ -379,6 +571,34 @@ BEGIN TRY
         (N'9786041234532', N'Victor Hugo'),
         (N'9786041234533', N'Stephen Hawking'),
         (N'9786041234534', N'Yuval Noah Harari')
+    ) AS v(isbn, author_name)
+    INNER JOIN catalog.books b ON b.isbn = v.isbn
+    INNER JOIN catalog.authors a ON a.name = v.author_name
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM catalog.book_authors ba
+        WHERE ba.book_id = b.book_id
+          AND ba.author_id = a.author_id
+    );
+            -- =========================================
+    -- LIÊN KẾT 12 SÁCH MỚI VỚI TÁC GIẢ
+    -- =========================================
+
+    INSERT INTO catalog.book_authors (book_id, author_id)
+    SELECT b.book_id, a.author_id
+    FROM (VALUES
+        (N'9786041234540', N'Ngô Sĩ Liên'),
+        (N'9786041234541', N'Phan Huy Lê'),
+        (N'9786041234542', N'Phan Kế Bính'),
+        (N'9786041234543', N'Trần Ngọc Thêm'),
+        (N'9786041234544', N'Robert C. Martin'),
+        (N'9786041234545', N'Kai-Fu Lee'),
+        (N'9786041234546', N'Daniel Kahneman'),
+        (N'9786041234547', N'Joseph Murphy'),
+        (N'9786041234548', N'Fukuzawa Yukichi'),
+        (N'9786041234549', N'Nguyễn Duy Cần'),
+        (N'9786041234550', N'Dan Senor'),
+        (N'9786041234551', N'W. Chan Kim')
     ) AS v(isbn, author_name)
     INNER JOIN catalog.books b ON b.isbn = v.isbn
     INNER JOIN catalog.authors a ON a.name = v.author_name
@@ -485,7 +705,19 @@ BEGIN TRY
         (22, N'9786041234531'),
         (23, N'9786041234532'),
         (24, N'9786041234533'),
-        (25, N'9786041234534')
+        (25, N'9786041234534'),
+        (26, N'9786041234540'),
+        (27, N'9786041234541'),
+        (28, N'9786041234542'),
+        (29, N'9786041234543'),
+        (30, N'9786041234544'),
+        (31, N'9786041234545'),
+        (32, N'9786041234546'),
+        (33, N'9786041234547'),
+        (34, N'9786041234548'),
+        (35, N'9786041234549'),
+        (36, N'9786041234550'),
+        (37, N'9786041234551')
     ) AS v(book_no, isbn)
     INNER JOIN catalog.books b ON b.isbn = v.isbn
     CROSS JOIN (VALUES (1), (2)) AS c(copy_no)

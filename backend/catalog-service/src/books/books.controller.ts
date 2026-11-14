@@ -22,10 +22,13 @@ export class BooksController {
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe)
     limit: number,
 
-    @Query('search')
+        @Query('search')
     search?: string,
+
+    @Query('categoryId')
+    categoryId?: string,
   ) {
-    return this.booksService.findAll(page, limit, search);
+    return this.booksService.findAll(page, limit, search, categoryId);
   }
 
     @Get(':id')
