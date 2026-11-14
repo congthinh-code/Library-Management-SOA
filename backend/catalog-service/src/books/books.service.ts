@@ -98,7 +98,7 @@ export class BooksService {
   }
 
 
-  async findAll(page = 1, limit = 20, search?: string) {
+  async findAll(page = 1, limit = 20, search?: string, categoryId?: string,) {
     if (!Number.isInteger(page) || page < 1) {
       throw new BadRequestException(
         'page phải là số nguyên lớn hơn hoặc bằng 1',
@@ -125,11 +125,21 @@ export class BooksService {
         'author.author_id = bookAuthor.author_id',
         );
 
-    if (search?.trim()) {
+        if (search?.trim()) {
       query.andWhere(
         '(book.title LIKE :search OR book.isbn LIKE :search OR author.name LIKE :search)',
         { search: `%${search.trim()}%` },
       );
+    }
+
+    if (categoryId !== undefined) {
+      if (!/^[1-9]\d*$/.test(categoryId)) {
+        throw new BadRequestException('categoryId không hợp lệ');
+      }
+
+      query.andWhere('category.category_id = :categoryId', {
+        categoryId,
+      });
     }
 
     const [books, total] = await query
