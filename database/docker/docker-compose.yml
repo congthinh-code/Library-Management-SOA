@@ -52,6 +52,51 @@ services:
     networks:
       - library-net
 
+    
+  auth-service:
+    build:
+      context: ../../backend/auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "3001:3001"
+    env_file:
+      - ../../backend/auth-service/.env
+    environment:
+      DB_HOST: sqlserver
+      DB_PORT: 1433
+      DB_USERNAME: sa
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: LibraryDB
+      PORT: 3001
+    depends_on:
+      - sqlserver
+    restart: unless-stopped
+    networks:
+      - library-net
+
+  reader-service:
+    build:
+      context: ../../backend/reader-service
+      dockerfile: Dockerfile
+    container_name: reader-service
+    ports:
+      - "3003:3003"
+    env_file:
+      - ../../backend/reader-service/.env
+    environment:
+      DB_HOST: sqlserver
+      DB_PORT: 1433
+      DB_USERNAME: sa
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: LibraryDB
+      PORT: 3003
+    depends_on:
+      - sqlserver
+    restart: unless-stopped
+    networks:
+      - library-net
+
 volumes:
   library_sql_data:
 
