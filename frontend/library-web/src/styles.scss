@@ -1,1 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--navy:#17365D;--blue:#2563EB;--teal:#0F9D9A;--bg:#F5F7FA;--white:#FFFFFF;--text:#263445;--muted:#718096;--border:#E5EAF0;--danger:#DC2626}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}button{cursor:pointer}
