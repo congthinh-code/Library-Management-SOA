@@ -29,6 +29,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD} # Tái sử dụng biến từ file .env chung
       DB_NAME: LibraryDB
       PORT: 3004
+      JWT_SECRET: change-this-secret-in-env
     depends_on:
       - sqlserver
     restart: unless-stopped
@@ -46,6 +47,7 @@ services:
       PORT: 3000
       CIRCULATION_SERVICE_HOST: circulation-service # Kết nối TCP tới container circulation-service
       CIRCULATION_SERVICE_PORT: 3004
+      JWT_SECRET: change-this-secret-in-env
     depends_on:
       - circulation-service
     restart: unless-stopped
@@ -69,6 +71,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: LibraryDB
       PORT: 3001
+      JWT_SECRET: change-this-secret-in-env
     depends_on:
       - sqlserver
     restart: unless-stopped
@@ -91,6 +94,27 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: LibraryDB
       PORT: 3003
+      JWT_SECRET: change-this-secret-in-env
+    depends_on:
+      - sqlserver
+    restart: unless-stopped
+    networks:
+      - library-net
+  
+  catalog-service:
+    build:
+      context: ../../backend/catalog-service
+      dockerfile: Dockerfile
+    container_name: catalog-service
+    ports:
+      - "3002:3002"
+    environment:
+      DB_HOST: sqlserver
+      DB_PORT: 1433
+      DB_USERNAME: sa
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: LibraryDB
+      PORT: 3002
     depends_on:
       - sqlserver
     restart: unless-stopped
