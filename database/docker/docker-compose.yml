@@ -47,6 +47,14 @@ services:
       PORT: 3000
       CIRCULATION_SERVICE_HOST: circulation-service # Kết nối TCP tới container circulation-service
       CIRCULATION_SERVICE_PORT: 3004
+      AUTH_SERVICE_HOST: auth-service
+      AUTH_SERVICE_PORT: 3001
+      CATALOG_SERVICE_HOST: catalog-service
+      CATALOG_SERVICE_PORT: 3002
+      READER_SERVICE_HOST: reader-service
+      READER_SERVICE_PORT: 3003
+      REPORTING_SERVICE_HOST: reporting-service
+      REPORTING_SERVICE_PORT: 3005
       JWT_SECRET: change-this-secret-in-env
     depends_on:
       - circulation-service
@@ -120,6 +128,26 @@ services:
     restart: unless-stopped
     networks:
       - library-net
+
+  # reporting-service:
+  #   build:
+  #     context: ../../backend/reporting-service
+  #     dockerfile: Dockerfile
+  #   container_name: reporting-service
+  #   ports:
+  #     - "3005:3005"
+  #   environment:
+  #     DB_HOST: sqlserver
+  #     DB_PORT: 1433
+  #     DB_USERNAME: sa
+  #     DB_PASSWORD: ${DB_PASSWORD}
+  #     DB_NAME: LibraryDB
+  #     PORT: 3002
+  #   depends_on:
+  #     - sqlserver
+  #   restart: unless-stopped
+  #   networks:
+  #     - library-net
 
 volumes:
   library_sql_data:
