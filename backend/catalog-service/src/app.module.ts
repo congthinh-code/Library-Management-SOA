@@ -8,13 +8,13 @@ import { BookAuthor } from './book-authors/entities/book-author.entity';
 import { BookCopy } from './book-copies/entities/book-copy.entity';
 import { CategoriesModule } from './categories/categories.module';
 import { BooksModule } from './books/books.module';
+import { BookCopiesModule } from './book-copies/book-copies.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -26,27 +26,18 @@ import { BooksModule } from './books/books.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         schema: configService.get<string>('DB_SCHEMA'),
-
         options: {
           encrypt: false,
           trustServerCertificate: true,
         },
-
-        entities: [
-  Category,
-  Author,
-  Book,
-  BookAuthor,
-  BookCopy,
-],
+        entities: [Category, Author, Book, BookAuthor, BookCopy],
         synchronize: false,
         logging: ['error'],
       }),
     }),
-
     CategoriesModule,
-
     BooksModule,
+    BookCopiesModule,
   ],
 })
 export class AppModule {}

@@ -22,16 +22,29 @@ services:
     container_name: circulation-service
     ports:
       - "3004:3004"
+    expose:
+      - "3014"
     environment:
-      DB_HOST: sqlserver        # Kết nối tới container sqlserver bằng tên service
+      NODE_ENV: production
+      DB_HOST: sqlserver
       DB_PORT: 1433
       DB_USERNAME: sa
-      DB_PASSWORD: ${DB_PASSWORD} # Tái sử dụng biến từ file .env chung
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: LibraryDB
+      DB_SCHEMA: circulation
+      DB_ENCRYPT: "false"
+      DB_TRUST_SERVER_CERTIFICATE: "true"
       PORT: 3004
+      TCP_HOST: 0.0.0.0
+      TCP_PORT: 3014
+      READER_SERVICE_URL: http://reader-service:3003/api/v1
+      CATALOG_SERVICE_URL: http://catalog-service:3002
+      CORS_ORIGINS: http://localhost:4200
       JWT_SECRET: change-this-secret-in-env
     depends_on:
       - sqlserver
+      - reader-service
+      - catalog-service
     restart: unless-stopped
     networks:
       - library-net
@@ -111,6 +124,8 @@ services:
     environment:
       DB_HOST: sqlserver
       DB_PORT: 1433
+      DB_DATABASE: LibraryDB
+      DB_SCHEMA: catalog
       DB_USERNAME: sa
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: LibraryDB
