@@ -9,7 +9,7 @@ import { AuthService } from '../core/athu';
   template: `
   <div class="layout">
     <aside class="sidebar">
-      <div class="brand">LIBRARY <span>MANAGEMENT</span></div>
+      <div class="brand" [class.brand-inline]="laTrangCatalog">LIBRARY <span>MANAGEMENT</span></div>
       <div class="role">{{ tenVaiTro }}</div>
       <nav>
         <a routerLink="/admin" routerLinkActive="active" *ngIf="auth.coVaiTro('ADMIN')">Tổng quan</a>
@@ -17,12 +17,16 @@ import { AuthService } from '../core/athu';
         <a routerLink="/reader" routerLinkActive="active" *ngIf="auth.coVaiTro('READER')">Trang độc giả</a>
         <a routerLink="/tai-khoan" routerLinkActive="active" *ngIf="auth.coVaiTro('ADMIN','STAFF')">Quản lý tài khoản</a>
         <a routerLink="/doc-gia" routerLinkActive="active" *ngIf="auth.coVaiTro('ADMIN','STAFF')">Quản lý độc giả</a>
+        <a routerLink="/books" routerLinkActive="active">Quản lý sách</a>
+        <a routerLink="/categories" routerLinkActive="active">Danh mục sách</a>
+        <a routerLink="/authors" routerLinkActive="active">Tác giả</a>
+        <a routerLink="/book-copies" routerLinkActive="active">Bản sao sách</a>
         <a routerLink="/ho-so" routerLinkActive="active" *ngIf="auth.coVaiTro('READER')">Hồ sơ của tôi</a>
       </nav>
       <button class="logout" (click)="thoat()">Đăng xuất</button>
     </aside>
     <main class="content">
-      <header class="top"><div><small>LIBRARY MANAGEMENT</small><strong>{{ tenNguoiDung }}</strong></div></header>
+      <header class="top" *ngIf="!laTrangCatalog"><div><small>LIBRARY MANAGEMENT</small><strong>{{ tenNguoiDung }}</strong></div></header>
       <router-outlet />
     </main>
   </div>`,
@@ -30,6 +34,7 @@ import { AuthService } from '../core/athu';
   .layout{min-height:100vh;display:flex;background:#F5F7FA;color:#263445;font-family:Inter,Arial,sans-serif}
   .sidebar{width:250px;flex:0 0 250px;background:#17365D;color:white;padding:26px 18px;display:flex;flex-direction:column;min-height:100vh}
   .brand{font-size:17px;font-weight:800;letter-spacing:.4px}.brand span{display:block;color:#75d0c9;font-size:12px;margin-top:3px}
+  .brand.brand-inline{font-size:15px;letter-spacing:.3px;white-space:nowrap}.brand.brand-inline span{display:inline;color:#fff;font-size:15px;margin-top:0}
   .role{margin:30px 10px 12px;color:#b8c8dc;font-size:11px;font-weight:700;text-transform:uppercase}
   nav{display:grid;gap:7px}nav a{padding:12px 13px;color:#e4edf7;text-decoration:none;border-radius:8px;font-size:14px}nav a:hover,nav a.active{background:#ffffff20;color:#fff}
   .logout{margin-top:auto;border:1px solid #ffffff55;background:transparent;color:white;border-radius:8px;padding:11px;cursor:pointer}
@@ -41,6 +46,7 @@ import { AuthService } from '../core/athu';
 })
 export class Khung {
   constructor(public auth: AuthService, private router: Router) {}
+  get laTrangCatalog(){ return /^\/(books|categories|authors|book-copies)(\/|$|\?)/.test(this.router.url); }
   get tenNguoiDung(){ return this.auth.layNguoiDung()?.username ?? 'Người dùng'; }
   get tenVaiTro(){ return (this.auth.layNguoiDung()?.roles ?? []).join(' · '); }
   thoat(){

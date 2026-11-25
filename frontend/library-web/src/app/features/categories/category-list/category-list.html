@@ -1,0 +1,115 @@
+<app-toast-banner [message]="toastMsg()" [type]="toastType()" (closed)="toastMsg.set('')" />
+
+<div class="page">
+  <header class="page-head">
+    <div>
+      <div class="crumb">QUẢN TRỊ <span>/</span> DANH MỤC SÁCH</div>
+      <h1>Quản lý danh mục sách</h1>
+      <p class="sub">Tra cứu, sắp xếp và thêm mới thể loại sách trong hệ thống.</p>
+    </div>
+    <!-- TODO: Khi hoàn thiện Auth, giới hạn nút Thêm danh mục cho ADMIN và STAFF -->
+    <button type="button" class="btn-primary" (click)="moModal()">＋ Thêm danh mục</button>
+  </header>
+
+  <section class="panel">
+    <div class="panel-top">
+      <h2>Danh sách danh mục</h2>
+      <span class="count">{{ total() }} danh mục</span>
+    </div>
+
+    <div class="tools">
+      <input
+        class="search-input"
+        [(ngModel)]="search"
+        placeholder="Tìm theo tên danh mục..."
+        (keyup.enter)="timKiem()"
+      />
+      <select [(ngModel)]="sortOption" (change)="timKiem()">
+        <option value="name:asc">Tên (A → Z)</option>
+        <option value="name:desc">Tên (Z → A)</option>
+        <option value="createdAt:desc">Mới nhất</option>
+        <option value="createdAt:asc">Cũ nhất</option>
+      </select>
+      <button type="button" class="btn-primary" (click)="timKiem()">Tìm kiếm</button>
+      <button type="button" class="btn-secondary" (click)="lamMoi()">Làm mới</button>
+    </div>
+
+    @if (error()) {
+      <p class="alert err">{{ error() }}</p>
+    }
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>MÃ</th>
+            <th>TÊN DANH MỤC</th>
+            <th>MÔ TẢ</th>
+            <th>NGÀY TẠO</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+            <tr><td colspan="4" class="state">Đang tải danh sách danh mục...</td></tr>
+          } @else if (categories().length === 0) {
+            <tr><td colspan="4" class="state">Không tìm thấy danh mục nào.</td></tr>
+          } @else {
+            @for (cat of categories(); track cat.id) {
+              <tr>
+                <td class="muted">#{{ cat.id }}</td>
+                <td><strong>{{ cat.name }}</strong></td>
+                <td>{{ cat.description || '—' }}</td>
+                <td class="muted">{{ cat.createdAt ? (cat.createdAt | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager">
+      <span>Trang <strong>{{ page() }}</strong> / {{ totalPages() }} (Tổng {{ total() }} danh mục)</span>
+      <div class="pager-btns">
+        <button type="button" class="btn-secondary" [disabled]="page() <= 1" (click)="doiTrang(page() - 1)">
+          Trang trước
+        </button>
+        <button type="button" class="btn-secondary" [disabled]="page() >= totalPages()" (click)="doiTrang(page() + 1)">
+          Trang sau
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+@if (hienModal) {
+  <div class="shade" (click)="hienModal = false">
+    <form class="modal" (click)="$event.stopPropagation()" (ngSubmit)="tao()">
+      <div class="modal-head">
+        <h2>Thêm danh mục mới</h2>
+        <button type="button" class="btn-close" (click)="hienModal = false">×</button>
+      </div>
+
+      <div class="field">
+        <label>Tên danh mục <span class="req">*</span></label>
+        <input name="name" [(ngModel)]="form.name" maxlength="100" placeholder="Ví dụ: Trí tuệ nhân tạo" required />
+      </div>
+
+      <div class="field">
+        <label>Mô tả</label>
+        <textarea name="description" [(ngModel)]="form.description" rows="3" maxlength="500" placeholder="Mô tả ngắn về danh mục..."></textarea>
+      </div>
+
+      @if (modalError()) {
+        <p class="alert err">{{ modalError() }}</p>
+      }
+
+      <div class="modal-foot">
+        <button type="button" class="btn-secondary" (click)="hienModal = false">Hủy</button>
+        <button type="submit" class="btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Đang lưu...' : 'Lưu danh mục' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}
+

@@ -1,0 +1,138 @@
+<app-toast-banner [message]="toastMsg()" [type]="toastType()" (closed)="toastMsg.set('')" />
+
+<div class="page">
+  <header class="page-head">
+    <div>
+      <div class="crumb">QUẢN TRỊ <span>/</span> BẢN SAO SÁCH</div>
+      <h1>Quản lý bản sao sách</h1>
+      <p class="sub">Theo dõi mã cuốn sách, tình trạng và thêm bản sao cho từng đầu sách.</p>
+    </div>
+    <button type="button" class="btn-primary" (click)="moModal()">＋ Thêm bản sao</button>
+  </header>
+
+  <section class="panel">
+    <div class="panel-top">
+      <h2>Danh sách bản sao</h2>
+      <span class="count">{{ copies().length }} bản sao</span>
+    </div>
+
+    <div class="tools">
+      <input
+        class="search-input"
+        [(ngModel)]="search"
+        placeholder="Tìm theo mã bản sao hoặc tên sách..."
+        (keyup.enter)="tai()"
+      />
+      <select [(ngModel)]="selectedBookId" (change)="tai()">
+        <option value="">Tất cả đầu sách</option>
+        @for (b of books(); track b.id) {
+          <option [value]="b.id">{{ b.title }}</option>
+        }
+      </select>
+      <select [(ngModel)]="selectedStatus" (change)="tai()">
+        <option value="">Tất cả trạng thái</option>
+        <option value="AVAILABLE">Sẵn sàng</option>
+        <option value="ON_LOAN">Đang mượn</option>
+        <option value="ON_HOLD">Đang giữ</option>
+        <option value="DAMAGED">Hư hỏng</option>
+        <option value="LOST">Mất</option>
+      </select>
+      <button type="button" class="btn-primary" (click)="tai()">Lọc</button>
+      <button type="button" class="btn-secondary" (click)="lamMoi()">Làm mới</button>
+    </div>
+
+    @if (error()) {
+      <p class="alert err">{{ error() }}</p>
+    }
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>MÃ</th>
+            <th>MÃ BẢN SAO</th>
+            <th>ĐẦU SÁCH</th>
+            <th>TRẠNG THÁI</th>
+            <th class="center">CẬP NHẬT TRẠNG THÁI</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+            <tr><td colspan="5" class="state">Đang tải danh sách bản sao...</td></tr>
+          } @else if (copies().length === 0) {
+            <tr><td colspan="5" class="state">Không tìm thấy bản sao sách phù hợp.</td></tr>
+          } @else {
+            @for (copy of copies(); track copy.id) {
+              <tr>
+                <td class="muted">#{{ copy.id }}</td>
+                <td><strong>{{ copy.copyCode }}</strong></td>
+                <td>
+                  <a [routerLink]="['/books', copy.bookId]" class="title-link">
+                    {{ tenSach(copy) }}
+                  </a>
+                </td>
+                <td><app-status-badge [status]="copy.status" /></td>
+                <td class="center">
+                  <select [ngModel]="copy.status" (ngModelChange)="doiTrangThai(copy, $event)">
+                    <option value="AVAILABLE">Sẵn sàng</option>
+                    <option value="ON_LOAN">Đang mượn</option>
+                    <option value="ON_HOLD">Đang giữ</option>
+                    <option value="DAMAGED">Hư hỏng</option>
+                    <option value="LOST">Mất</option>
+                  </select>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+@if (hienModal) {
+  <div class="shade" (click)="hienModal = false">
+    <form class="modal" (click)="$event.stopPropagation()" (ngSubmit)="tao()">
+      <div class="modal-head">
+        <h2>Thêm bản sao sách mới</h2>
+        <button type="button" class="btn-close" (click)="hienModal = false">×</button>
+      </div>
+
+      <div class="field">
+        <label>Đầu sách <span class="req">*</span></label>
+        <select name="bookId" [(ngModel)]="form.bookId" required>
+          <option value="">-- Chọn đầu sách --</option>
+          @for (b of books(); track b.id) {
+            <option [value]="b.id">{{ b.title }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Mã bản sao <span class="req">*</span></label>
+        <input name="copyCode" [(ngModel)]="form.copyCode" maxlength="50" placeholder="Ví dụ: COPY-001" required />
+      </div>
+
+      <div class="field">
+        <label>Trạng thái ban đầu</label>
+        <select name="status" [(ngModel)]="form.status">
+          <option value="AVAILABLE">Sẵn sàng</option>
+          <option value="ON_HOLD">Đang giữ</option>
+          <option value="DAMAGED">Hư hỏng</option>
+        </select>
+      </div>
+
+      @if (modalError()) {
+        <p class="alert err">{{ modalError() }}</p>
+      }
+
+      <div class="modal-foot">
+        <button type="button" class="btn-secondary" (click)="hienModal = false">Hủy</button>
+        <button type="submit" class="btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Đang lưu...' : 'Lưu bản sao' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}
+

@@ -1,0 +1,7 @@
+.detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.item label { display: block; color: #6b7280; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+.item .val { color: #1f2937; font-size: 15px; font-weight: 600; }
+.full { grid-column: 1 / -1; }
+.inline-add { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+@media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }
+
