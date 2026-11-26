@@ -7,6 +7,7 @@ import { Reader } from './reader.entity';
 import { ReadersController } from './readers.controller';
 import { ReadersService } from './readers.service';
 import { JwtStrategy } from '../common/strategies/jwt.strategy';
+import { RolesGuard } from '../common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { JwtStrategy } from '../common/strategies/jwt.strategy';
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [ReadersController],
-  providers: [ReadersService, JwtStrategy],
+  providers: [ReadersService, JwtStrategy , RolesGuard],
 })
 export class ReadersModule {}
