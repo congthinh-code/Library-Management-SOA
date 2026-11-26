@@ -83,6 +83,7 @@ services:
       DB_USERNAME: sa
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: LibraryDB
+      DB_SCHEMA: auth
       PORT: 3001
       JWT_SECRET: change-this-secret-in-env
     depends_on:
@@ -106,6 +107,7 @@ services:
       DB_USERNAME: sa
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: LibraryDB
+      DB_SCHEMA: auth
       PORT: 3003
       JWT_SECRET: change-this-secret-in-env
     depends_on:
@@ -128,7 +130,6 @@ services:
       DB_SCHEMA: catalog
       DB_USERNAME: sa
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_DATABASE: LibraryDB
       PORT: 3002
     depends_on:
       - sqlserver
