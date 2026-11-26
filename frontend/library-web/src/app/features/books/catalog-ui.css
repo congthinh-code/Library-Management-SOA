@@ -1,0 +1,51 @@
+.page { padding: 32px; max-width: 1360px; margin: 0 auto; color: #1f2937; }
+.page-head, .panel-top, .pager { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+.page-head { margin-bottom: 24px; flex-wrap: wrap; }
+.crumb { color: #0f9d9a; font-size: 12px; font-weight: 700; letter-spacing: .6px; }
+.crumb span { color: #9ca3af; padding: 0 5px; }
+h1 { color: #17365d; font-size: 28px; font-weight: 700; margin: 6px 0; }
+.sub, .muted { color: #6b7280; }
+.sub { margin: 0; font-size: 14px; }
+.head-actions, .tools, .pager-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.panel { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 10px #17365d08; }
+.panel-top { margin-bottom: 18px; }
+.panel-top h2 { color: #17365d; font-size: 18px; margin: 0; }
+.count { background: #eaf4f7; color: #0f9d9a; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.tools { margin-bottom: 18px; }
+input, select, textarea { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; background: #fff; color: #1f2937; outline: none; }
+input:focus, select:focus, textarea:focus { border-color: #0f9d9a; box-shadow: 0 0 0 3px #0f9d9a18; }
+.search-input { flex: 1; min-width: 240px; }
+.btn-primary, .btn-secondary { border: none; border-radius: 8px; padding: 10px 15px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.btn-primary { background: #17365d; color: #fff; }
+.btn-primary:hover { background: #234c78; }
+.btn-secondary { background: #eef3f8; color: #17365d; }
+.btn-secondary:hover { background: #e2eaf3; }
+.btn-primary:disabled, .btn-secondary:disabled { opacity: .55; cursor: not-allowed; }
+.btn-sm { border: none; border-radius: 6px; padding: 7px 12px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; }
+.btn-info { background: #eff6ff; color: #2563eb; }
+.btn-edit { background: #edf3f9; color: #17365d; }
+.btn-del { background: #fff0ef; color: #dc2626; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th { background: #f9fafb; color: #6b7280; font-size: 11px; font-weight: 700; letter-spacing: .5px; padding: 13px 12px; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+td { padding: 13px 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; vertical-align: middle; }
+tbody tr:hover { background: #f8fbfd; }
+.title-link { color: #17365d; font-weight: 600; text-decoration: none; }
+.title-link:hover { color: #2563eb; text-decoration: underline; }
+.desc { color: #6b7280; font-size: 12px; margin-top: 3px; max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tag { background: #edf3f9; color: #17365d; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.center { text-align: center; }
+.actions { display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: nowrap; }
+.state { text-align: center; padding: 36px 16px; color: #6b7280; }
+.alert.err { padding: 11px 14px; border-radius: 8px; font-size: 13px; margin: 0 0 16px; background: #fff0ef; color: #b91c1c; border: 1px solid #fecaca; }
+.pager { padding-top: 16px; font-size: 13px; color: #6b7280; }
+.shade { position: fixed; inset: 0; background: #10243b80; display: grid; place-items: center; padding: 16px; z-index: 1000; }
+.modal { background: #fff; border-radius: 14px; padding: 24px; width: min(480px, 100%); display: grid; gap: 14px; box-shadow: 0 20px 50px #10243b30; }
+.modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.modal-head h2 { color: #17365d; margin: 0; font-size: 20px; }
+.btn-close { background: #f3f4f6; color: #6b7280; border: none; border-radius: 8px; width: 32px; height: 32px; font-size: 20px; }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 13px; font-weight: 600; color: #1f2937; }
+.req { color: #dc2626; }
+.modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding-top: 8px; border-top: 1px solid #e5e7eb; }
+@media (max-width: 768px) { .page { padding: 18px; } }

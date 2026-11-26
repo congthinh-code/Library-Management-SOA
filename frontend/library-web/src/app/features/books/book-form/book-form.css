@@ -1,0 +1,7 @@
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.full { grid-column: 1 / -1; }
+.author-box { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb; max-height: 150px; overflow-y: auto; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 20px; border: 1px solid #d1d5db; background: #fff; font-size: 13px; cursor: pointer; }
+.chip.active { background: #17365d; color: #fff; border-color: #17365d; }
+@media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+

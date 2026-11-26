@@ -1,0 +1,88 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <div class="crumb">QUẢN TRỊ <span>/</span> SÁCH <span>/</span> {{ isEdit() ? 'CHỈNH SỬA' : 'THÊM MỚI' }}</div>
+      <h1>{{ isEdit() ? 'Chỉnh sửa thông tin sách' : 'Thêm sách mới' }}</h1>
+      <p class="sub">Điền đầy đủ thông tin sách và phân loại danh mục, tác giả.</p>
+    </div>
+    <a routerLink="/books" class="btn-secondary">← Quay lại danh sách</a>
+  </header>
+
+  <section class="panel">
+    @if (loading()) {
+      <p class="state">Đang tải thông tin đầu sách...</p>
+    } @else {
+      <form class="form-grid" (ngSubmit)="luu()">
+        <div class="field full">
+          <label>Tên đầu sách <span class="req">*</span></label>
+          <input name="title" [(ngModel)]="form.title" maxlength="255" placeholder="Nhập tên sách..." required />
+        </div>
+
+        <div class="field">
+          <label>Danh mục <span class="req">*</span></label>
+          <select name="categoryId" [(ngModel)]="form.categoryId" required>
+            <option value="">-- Chọn danh mục --</option>
+            @for (cat of categories(); track cat.id) {
+              <option [value]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Mã ISBN</label>
+          <input name="isbn" [(ngModel)]="form.isbn" maxlength="20" placeholder="Ví dụ: 9786041234501" />
+        </div>
+
+        <div class="field">
+          <label>Nhà xuất bản</label>
+          <input name="publisher" [(ngModel)]="form.publisher" maxlength="150" placeholder="Ví dụ: NXB Trẻ" />
+        </div>
+
+        <div class="field">
+          <label>Năm xuất bản</label>
+          <input name="publishedYear" [(ngModel)]="form.publishedYear" type="number" min="0" max="9999" placeholder="2024" />
+        </div>
+
+        <div class="field full">
+          <label>Tác giả</label>
+          @if (authors().length > 0) {
+            <div class="author-box">
+              @for (author of authors(); track author.id) {
+                <button
+                  type="button"
+                  class="chip"
+                  [class.active]="selectedAuthorIds().includes(author.id)"
+                  (click)="toggleAuthor(author.id)"
+                >
+                  {{ author.name }}
+                </button>
+              }
+            </div>
+          }
+          <input
+            name="extraAuthorIds"
+            [(ngModel)]="extraAuthorIds"
+            placeholder="Nhập mã tác giả nếu có (cách nhau dấu phẩy, có thể bỏ trống)"
+          />
+        </div>
+
+        <div class="field full">
+          <label>Mô tả tóm tắt</label>
+          <textarea name="description" [(ngModel)]="form.description" rows="4" placeholder="Nhập giới thiệu nội dung sách..."></textarea>
+        </div>
+
+        @if (error()) {
+          <p class="alert err full">{{ error() }}</p>
+        }
+
+        <div class="modal-foot full">
+          <a routerLink="/books" class="btn-secondary">Hủy bỏ</a>
+          <button type="submit" class="btn-primary" [disabled]="saving()">
+            {{ saving() ? 'Đang lưu...' : (isEdit() ? 'Lưu thay đổi' : 'Tạo đầu sách') }}
+          </button>
+        </div>
+      </form>
+    }
+  </section>
+</div>
+

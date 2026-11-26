@@ -1,0 +1,106 @@
+<app-toast-banner [message]="toastMsg()" [type]="toastType()" (closed)="toastMsg.set('')" />
+
+<div class="page">
+  <header class="page-head">
+    <div>
+      <div class="crumb">QUẢN TRỊ <span>/</span> TÁC GIẢ</div>
+      <h1>Quản lý tác giả</h1>
+      <p class="sub">Tra cứu thông tin tác giả và bổ sung tác giả mới vào hệ thống.</p>
+    </div>
+    <button type="button" class="btn-primary" (click)="moModal()">＋ Thêm tác giả</button>
+  </header>
+
+  <section class="panel">
+    <div class="panel-top">
+      <h2>Danh sách tác giả</h2>
+      <span class="count">{{ total() }} tác giả</span>
+    </div>
+
+    <div class="tools">
+      <input
+        class="search-input"
+        [(ngModel)]="search"
+        placeholder="Tìm theo tên tác giả..."
+        (keyup.enter)="timKiem()"
+      />
+      <button type="button" class="btn-primary" (click)="timKiem()">Tìm kiếm</button>
+      <button type="button" class="btn-secondary" (click)="lamMoi()">Làm mới</button>
+    </div>
+
+    @if (error()) {
+      <p class="alert err">{{ error() }}</p>
+    }
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>MÃ</th>
+            <th>TÊN TÁC GIẢ</th>
+            <th>TIỂU SỬ</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+            <tr><td colspan="3" class="state">Đang tải danh sách tác giả...</td></tr>
+          } @else if (authors().length === 0) {
+            <tr><td colspan="3" class="state">Chưa có tác giả nào phù hợp.</td></tr>
+          } @else {
+            @for (author of authors(); track author.id) {
+              <tr>
+                <td class="muted">#{{ author.id }}</td>
+                <td><strong>{{ author.name }}</strong></td>
+                <td>{{ author.biography || '—' }}</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager">
+      <span>Trang <strong>{{ page() }}</strong> / {{ totalPages() }} (Tổng {{ total() }} tác giả)</span>
+      <div class="pager-btns">
+        <button type="button" class="btn-secondary" [disabled]="page() <= 1" (click)="doiTrang(page() - 1)">
+          Trang trước
+        </button>
+        <button type="button" class="btn-secondary" [disabled]="page() >= totalPages()" (click)="doiTrang(page() + 1)">
+          Trang sau
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+@if (hienModal) {
+  <div class="shade" (click)="hienModal = false">
+    <form class="modal" (click)="$event.stopPropagation()" (ngSubmit)="tao()">
+      <div class="modal-head">
+        <h2>Thêm tác giả mới</h2>
+        <button type="button" class="btn-close" (click)="hienModal = false">×</button>
+      </div>
+
+      <div class="field">
+        <label>Họ tên tác giả <span class="req">*</span></label>
+        <input name="name" [(ngModel)]="form.name" maxlength="150" placeholder="Ví dụ: Nguyễn Ngọc Tư" required />
+      </div>
+
+      <div class="field">
+        <label>Tiểu sử</label>
+        <textarea name="biography" [(ngModel)]="form.biography" rows="3" placeholder="Giới thiệu ngắn về tác giả..."></textarea>
+      </div>
+
+      @if (modalError()) {
+        <p class="alert err">{{ modalError() }}</p>
+      }
+
+      <div class="modal-foot">
+        <button type="button" class="btn-secondary" (click)="hienModal = false">Hủy</button>
+        <button type="submit" class="btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Đang lưu...' : 'Lưu tác giả' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}
+

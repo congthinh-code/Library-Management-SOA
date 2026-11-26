@@ -1,0 +1,147 @@
+<app-toast-banner
+  [message]="toastMsg()"
+  [type]="toastType()"
+  (closed)="toastMsg.set('')"
+/>
+
+<app-confirm-dialog
+  [open]="!!bookToDelete()"
+  title="Xác nhận xóa đầu sách"
+  [message]="'Bạn có chắc chắn muốn xóa sách &quot;' + (bookToDelete()?.title ?? '') + '&quot;? Hành động này không thể hoàn tác.'"
+  confirmLabel="Xóa sách"
+  (confirmed)="xacNhanXoa()"
+  (cancelled)="bookToDelete.set(null)"
+/>
+
+<div class="page">
+  <header class="page-head">
+    <div>
+      <div class="crumb">QUẢN TRỊ <span>/</span> SÁCH</div>
+      <h1>Quản lý sách</h1>
+      <p class="sub">Tra cứu, lọc theo danh mục và quản lý danh sách đầu sách trong thư viện.</p>
+    </div>
+    <!-- TODO: Khi hoàn thiện Auth, chỉ hiển thị nút Thêm/Sửa/Xóa với ADMIN và STAFF -->
+    <a routerLink="/books/new" class="btn-primary">＋ Thêm sách mới</a>
+  </header>
+
+  <section class="panel">
+    <div class="panel-top">
+      <h2>Danh sách đầu sách</h2>
+      <span class="count">{{ total() }} đầu sách</span>
+    </div>
+
+    <div class="tools">
+      <div class="search-wrap">
+        <input
+          class="search-input"
+          [ngModel]="search"
+          (ngModelChange)="search = $event; onSearchInput($event)"
+          (focus)="onSearchFocus()"
+          (blur)="anGoiY()"
+          placeholder="Tìm theo tên sách, ISBN hoặc tên tác giả..."
+          autocomplete="off"
+          (keyup.enter)="timKiem()"
+        />
+
+        @if (showSuggestions()) {
+          <div class="suggest-box">
+            @if (suggestLoading()) {
+              <div class="suggest-empty">Đang tìm sách phù hợp...</div>
+            } @else if (suggestions().length === 0) {
+              <div class="suggest-empty">Không có đầu sách gợi ý phù hợp.</div>
+            } @else {
+              @for (item of suggestions(); track item.id) {
+                <button
+                  type="button"
+                  class="suggest-item"
+                  (mousedown)="chonGoiY(item); $event.preventDefault()"
+                >
+                  <div class="suggest-title">{{ item.title }}</div>
+                  <div class="suggest-meta">
+                    <span>{{ item.category?.name || 'Chưa phân loại' }}</span>
+                    @if (item.isbn) {
+                      <span>• ISBN: {{ item.isbn }}</span>
+                    }
+                  </div>
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+      <select [(ngModel)]="selectedCategoryId" (change)="timKiem()">
+        <option value="">Tất cả danh mục</option>
+        @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.name }}</option>
+        }
+      </select>
+      <button type="button" class="btn-primary" (click)="timKiem()">Tìm kiếm</button>
+      <button type="button" class="btn-secondary" (click)="lamMoi()">Làm mới</button>
+    </div>
+
+    @if (error()) {
+      <p class="alert err">{{ error() }}</p>
+    }
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>MÃ</th>
+            <th>TÊN ĐẦU SÁCH</th>
+            <th>ISBN</th>
+            <th>DANH MỤC</th>
+            <th>NHÀ XUẤT BẢN</th>
+            <th>NĂM XB</th>
+            <th class="center">THAO TÁC</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+            <tr><td colspan="7" class="state">Đang tải danh sách sách...</td></tr>
+          } @else if (books().length === 0) {
+            <tr><td colspan="7" class="state">Không tìm thấy đầu sách phù hợp.</td></tr>
+          } @else {
+            @for (book of books(); track book.id) {
+              <tr>
+                <td class="muted">#{{ book.id }}</td>
+                <td>
+                  <a [routerLink]="['/books', book.id]" class="title-link">{{ book.title }}</a>
+                  @if (book.description) {
+                    <div class="desc">{{ book.description }}</div>
+                  }
+                </td>
+                <td class="muted">{{ book.isbn || '—' }}</td>
+                <td>
+                  <span class="tag">{{ book.category?.name || 'Chưa phân loại' }}</span>
+                </td>
+                <td>{{ book.publisher || '—' }}</td>
+                <td>{{ book.publishedYear ?? '—' }}</td>
+                <td class="center">
+                  <div class="actions">
+                    <a [routerLink]="['/books', book.id]" class="btn-sm btn-info">Chi tiết</a>
+                    <a [routerLink]="['/books', book.id, 'edit']" class="btn-sm btn-edit">Sửa</a>
+                    <button type="button" class="btn-sm btn-del" (click)="bookToDelete.set(book)">Xóa</button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager">
+      <span>Trang <strong>{{ page() }}</strong> / {{ totalPages() }} (Tổng {{ total() }} đầu sách)</span>
+      <div class="pager-btns">
+        <button type="button" class="btn-secondary" [disabled]="page() <= 1" (click)="doiTrang(page() - 1)">
+          Trang trước
+        </button>
+        <button type="button" class="btn-secondary" [disabled]="page() >= totalPages()" (click)="doiTrang(page() + 1)">
+          Trang sau
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
